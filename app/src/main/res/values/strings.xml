@@ -2,4 +2,12 @@
     <string name="app_name">Apps</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="TAB_CONTENT1">This is Tab1</string>
+    <string name="TAB_CONTENT2">This is Tab2</string>
+    <string name="TAB_CONTENT3">This is Tab3</string>
+
+    <string name="Fragment1">Fragment1</string>
+    <string name="Fragment2">Fragment2</string>
+    <string name="Fragment3">Fragment3</string>
+
 </resources>

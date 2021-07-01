@@ -1,40 +1,63 @@
 package com.example.apps;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 
-import android.widget.TabHost;
-import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    private TabLayout tabLayout;
+    private ArrayList <String> tabNames = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TabHost tabHost1 = (TabHost) findViewById(R.id.tabHost1) ;
-        tabHost1.setup() ;
-
-        // 첫 번째 Tab. (탭 표시 텍스트:"TAB 1"), (페이지 뷰:"content1")
-        TabHost.TabSpec ts1 = tabHost1.newTabSpec("Tab Spec 1") ;
-        ts1.setContent(R.id.content1) ;
-        ts1.setIndicator("TAB 1") ;
-        tabHost1.addTab(ts1)  ;
-
-        // 두 번째 Tab. (탭 표시 텍스트:"TAB 2"), (페이지 뷰:"content2")
-        TabHost.TabSpec ts2 = tabHost1.newTabSpec("Tab Spec 2") ;
-        ts2.setContent(R.id.content2) ;
-        ts2.setIndicator("TAB 2") ;
-        tabHost1.addTab(ts2) ;
-
-        // 세 번째 Tab. (탭 표시 텍스트:"TAB 3"), (페이지 뷰:"content3")
-        TabHost.TabSpec ts3 = tabHost1.newTabSpec("Tab Spec 3") ;
-        ts3.setContent(R.id.content3) ;
-        ts3.setIndicator("TAB 3") ;
-        tabHost1.addTab(ts3) ;
+        loadTabName();
+        setTabLayout();
+        setViewPager();
 
     }
 
+    @TargetApi(Build.VERSION_CODES.N)
+    private void setTabLayout(){
+        tabLayout = findViewById(R.id.tab);
+        tabNames.stream().forEach(name ->tabLayout.addTab(tabLayout.newTab().setText(name)));
+    }
 
+    private void loadTabName(){
+        tabNames.add("탭1");
+        tabNames.add("탭2");
+        tabNames.add("탭3");
+    }
 
+    private void setViewPager() {
+        MainFragmentAdapter adapter = new MainFragmentAdapter(getSupportFragmentManager());
+        ViewPager viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
 }

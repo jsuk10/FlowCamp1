@@ -1,87 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.apps.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:context=".MainActivity">
 
-    <TabHost
-        android:id="@+id/tabHost1"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <!-- TabWidget의 id값이 반드시 "tabs"로 지정되어야 함. -->
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <!-- FrameLayout의 id값이 반드시 "tabcontent"로 지정되어야 함. -->
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <!-- 첫 번째 페이지. content1 -->
-                <LinearLayout
-                    android:id="@+id/content1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#8BC34A"
-                        android:gravity="center"
-                        android:padding="8dp"
-                        android:text="TAB CONTENT 1" />
-
-                </LinearLayout>
-
-                <!-- 두 번째 페이지. content2 -->
-                <LinearLayout
-                    android:id="@+id/content2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#009688"
-                        android:gravity="center"
-                        android:padding="8dp"
-                        android:text="TAB CONTENT 2" />
-
-                </LinearLayout>
-
-                <!-- 세 번째 페이지. content3 -->
-                <LinearLayout
-                    android:id="@+id/content3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#2196F3"
-                        android:gravity="center"
-                        android:padding="8dp"
-                        android:text="TAB CONTENT 3" />
-
-                </LinearLayout>
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>
+        android:layout_height="40dp"
+        android:background="@android:color/white"
+        >
+    </com.google.android.material.tabs.TabLayout>
+    <androidx.viewpager.widget.ViewPager
+        android:layout_below="@+id/tab"
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    </androidx.viewpager.widget.ViewPager>
 </RelativeLayout>
