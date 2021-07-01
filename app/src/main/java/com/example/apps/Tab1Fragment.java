@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.core.app.ActivityCompat;
@@ -45,7 +46,11 @@ public class Tab1Fragment extends Fragment {
         listView.setAdapter(arrayAdapter);
         listView.setAdapter(arrayAdapter);
 
-        // 연락처 읽기 권한이 부여되었는지 확인합니다.
+        Button button = (Button) view.findViewById(R.id.tab1_button);
+        button.setOnClickListener(v -> clickEvent());
+        return view;
+    }
+    public void clickEvent(){
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             // 사용자에게 권한을 요청합니다.
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS}, 100);
@@ -53,9 +58,7 @@ public class Tab1Fragment extends Fragment {
             // 앱에 이미 권한이있는 경우이 블록이 실행됩니다.
             readContacts();
         }
-        return view;
     }
-
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +94,7 @@ public class Tab1Fragment extends Fragment {
                     contact += "No Phone Number";
                 }
                 arrayList.add(contact);
-                
+
             } while (cursor.moveToNext());
             arrayAdapter.notifyDataSetChanged();
         }
