@@ -3,4 +3,4 @@
 ## Week 1 assignment
 ### App development using Android Studio
 
-Lee JeongSeok, KimHyunJi
+Lee JeongSeok, Kim HyeonJi
