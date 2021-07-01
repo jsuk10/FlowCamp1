@@ -1,10 +1,9 @@
 package com.example.apps;
 
 import android.os.Bundle;
-
 import android.widget.TabHost;
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     @Override
