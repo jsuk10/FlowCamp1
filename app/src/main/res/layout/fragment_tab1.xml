@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FF03DAC5"
+    tools:context=".Tab1Fragment">
+
+    <Button
+        android:id="@+id/tab1_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="연락처 가져오기" />
+
+    <ListView
+        android:id="@+id/tab1_listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>
