@@ -57,6 +57,8 @@ public class Tab1Fragment extends Fragment {
         phone = view.findViewById(R.id.tab1_inputNumber);
         swipeRefreshLayout = view.findViewById(R.id.tab1_swiperefresh);
 
+        request();
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View views, int position, long id) {
@@ -75,11 +77,10 @@ public class Tab1Fragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             // 사용자에게 권한을 요청합니다.
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS}, 100);
-        } else {
+        }else {
             // 앱에 이미 권한이있는 경우이 블록이 실행됩니다.
             readContacts();
         }
