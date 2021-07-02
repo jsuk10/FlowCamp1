@@ -1,68 +1,101 @@
 package com.example.apps;
 
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.content.res.TypedArray;
+import android.database.DataSetObservable;
+import android.database.DataSetObserver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Gallery;
+import android.widget.GridView;
 import android.widget.ImageView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.List;
+import java.io.File;
+import java.util.ArrayList;
 
-public class Tab2GalleryAdapter extends RecyclerView.Adapter<Tab2GalleryAdapter.ViewHolder>{
+public class Tab2GalleryAdapter extends BaseAdapter {
+    ArrayList<String> mItems; // CustomGalleryAdapter를 선언할 때 지정 경로를 받아오기 위한 변수
+    Context mContext; // CustomGalleryAdapter를 선언할 때 해당 activity의 context를 받아오기 위한 context 변수
+    Bitmap bm; // 지정 경로의 사진을 Bitmap으로 받아오기 위한 변수
+    DataSetObservable mDataSetObservable = new DataSetObservable(); // DataSetObservable(DataSetObserver)의 생성
 
-    private Context context;
-    private List<String> images;
-    protected PhotoListener photoListener;
+    public String TAG = "Gallery Adapter Example :: ";
 
-    public Tab2GalleryAdapter(Context context, List<String> images, PhotoListener photoListener) {
-        this.context = context;
-        this.images = images;
-        this.photoListener = photoListener;
-    }
-
-    @NonNull
-    @Override
-    public Tab2GalleryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(
-                LayoutInflater.from(context).inflate(R.layout.tab2_gallery_item, parent, false)
-        );
+    public Tab2GalleryAdapter(Context context, ArrayList<String> uriArr){ // CustomGalleryAdapter의 생성자
+        this.mContext = context;
+        this.mItems = uriArr;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String image = images.get(position);
-        Glide.with(context).load(image).into(holder.image);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                photoListener.onPhotoClick(image);
-            }
-        });
+    public int getCount() {
+        return mItems.size();
     }
 
     @Override
-    public int getItemCount() {
-        return 0;
+    public Object getItem(int position) { // Gallery array의 해당 position을 반환
+        return mItems.get(position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public String getItemPath(int position){
+        String path = mItems.get(position);
+        return path;
+    }
 
-        ImageView image;
+    @Override
+    public long getItemId(int position) { // Gallery array의 해당 position을 long 값으로 반환
+        return position;
+    }
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            image = itemView.findViewById(R.id.image);
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ImageView imageView;
+        if (convertView == null) {
+            // if it's not recycled, initialize some attributes
+            imageView = new ImageView(mContext);
+            imageView.setPadding(8, 8, 8, 8);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, GridView.LayoutParams.MATCH_PARENT));
+
+        } else {
+            imageView = (ImageView) convertView;
         }
+        BitmapFactory.Options bo = new BitmapFactory.Options();
+        bo.inSampleSize = 8;
+        bm = BitmapFactory.decodeFile(mItems.get(position), bo);
+        Bitmap mThumbnail = ThumbnailUtils.extractThumbnail(bm, 300, 300);
+        imageView.setImageBitmap(mThumbnail);
+
+        if (bm != null && !bm.isRecycled()) {
+            bm.recycle();
+        }
+
+        //Glide.with(mContext).load(mItems.get(position)).into(imageView);
+
+        return imageView;
     }
 
-    public interface PhotoListener{
-        void onPhotoClick(String path);
+
+    @Override
+    public void registerDataSetObserver(DataSetObserver observer){ // DataSetObserver의 등록(연결)
+        mDataSetObservable.registerObserver(observer);
     }
 
+    @Override
+    public void unregisterDataSetObserver(DataSetObserver observer){ // DataSetObserver의 해제
+        mDataSetObservable.unregisterObserver(observer);
+    }
+
+    @Override
+    public void notifyDataSetChanged(){ // 위에서 연결된 DataSetObserver를 통한 변경 확인
+        mDataSetObservable.notifyChanged();
+    }
 
 }

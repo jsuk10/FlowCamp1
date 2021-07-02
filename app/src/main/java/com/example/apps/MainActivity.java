@@ -10,13 +10,11 @@ import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
-import android.widget.TabHost;
 
-import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
-    private ArrayList <String> tabNames = new ArrayList<>();
+    final private ArrayList <String> tabNames = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.N)
     private void setTabLayout(){
         tabLayout = findViewById(R.id.tab);
-        tabNames.stream().forEach(name ->tabLayout.addTab(tabLayout.newTab().setText(name)));
+        tabNames.forEach(name ->tabLayout.addTab(tabLayout.newTab().setText(name)));
     }
 
     private void loadTabName(){

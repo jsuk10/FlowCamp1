@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Apps</string>
+<!--    <string name="app_name">Apps</string>-->
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="TAB_CONTENT1">This is Tab1</string>
@@ -9,5 +9,11 @@
     <string name="Fragment1">Fragment1</string>
     <string name="Fragment2">Fragment2</string>
     <string name="Fragment3">Fragment3</string>
+
+    <string name="app_name">Photo List</string>
+
+    <string name="action_delete">Delete all</string>
+    <string name="created_at">Created At:</string>
+    <string name="image_download_url">https://picsum.photos/200/300/?random</string>
 
 </resources>
