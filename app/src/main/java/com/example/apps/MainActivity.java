@@ -1,11 +1,11 @@
 package com.example.apps;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadTabName(){
-        tabNames.add("탭1");
-        tabNames.add("탭2");
-        tabNames.add("탭3");
+        tabNames.add("Contracts");
+        tabNames.add("Gallery");
+        tabNames.add("secret");
     }
 
     private void setViewPager() {

@@ -15,7 +15,7 @@ public class MainFragmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return Tab2Fragment.newInstance();
+                return Tab1Fragment.newInstance();
             case 1:
                 return Tab2Fragment.newInstance();
             case 2:
