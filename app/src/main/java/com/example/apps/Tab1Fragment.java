@@ -10,9 +10,11 @@ import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -46,6 +48,13 @@ public class Tab1Fragment extends Fragment {
         listView.setAdapter(arrayAdapter);
         listView.setAdapter(arrayAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String selected_item = (String)adapterView.getItemAtPosition(position);
+                Toast.makeText(getActivity(), selected_item, Toast.LENGTH_SHORT).show();
+            }
+        });
         Button button = (Button) view.findViewById(R.id.tab1_button);
         button.setOnClickListener(v -> clickEvent());
         return view;
