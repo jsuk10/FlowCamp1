@@ -2,7 +2,6 @@ package com.example.apps;
 
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -22,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,6 +31,7 @@ public class Tab2Fragment extends Fragment {
 
     private Context context;
     private View view;
+    private SwipeRefreshLayout swipeRefreshLayout;
     public String basePath = null;
     public GridView mGridView;
     public ArrayList<String> uriArr;
@@ -70,7 +71,17 @@ public class Tab2Fragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_tab2, container, false);
         mGridView = view.findViewById(R.id.gridview); // .xml의 GridView와 연결
         uriArr = new ArrayList<String>();
+        swipeRefreshLayout = view.findViewById(R.id.tab2_swiperefresh);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                /* swipe 시 진행할 동작 */
+                loadImages();
+                /* 업데이트가 끝났음을 알림 */
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_READ_PERMISSION_CODE);
         } else {
@@ -87,7 +98,7 @@ public class Tab2Fragment extends Fragment {
     }
 
     private void loadImages() {
-
+        uriArr.clear();
         ContentResolver contentResolver = getActivity().getContentResolver();
         Cursor cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 null,
