@@ -23,6 +23,7 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 
@@ -32,6 +33,7 @@ public class Tab1Fragment extends Fragment {
     ListView listView;
     ArrayList<CustomContext> arrayLists;
     ArrayAdapter arrayAdapters;
+    SwipeRefreshLayout swipeRefreshLayout;
     View view;
 
     public Tab1Fragment() {
@@ -53,6 +55,7 @@ public class Tab1Fragment extends Fragment {
         listView.setAdapter(arrayAdapters);
         name = view.findViewById(R.id.tab1_inputName);
         phone = view.findViewById(R.id.tab1_inputNumber);
+        swipeRefreshLayout = view.findViewById(R.id.tab1_swiperefresh);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -62,7 +65,17 @@ public class Tab1Fragment extends Fragment {
                 ((Activity)view.getContext()).startActivity(call);
             }
         });
-        view.findViewById(R.id.tab1_button).setOnClickListener(v -> reacContacts());
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                /* swipe 시 진행할 동작 */
+                readContacts();
+                /* 업데이트가 끝났음을 알림 */
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+        readContacts();
         view.findViewById(R.id.tab1_button2).setOnClickListener(v -> addContacts());
         return view;
     }
