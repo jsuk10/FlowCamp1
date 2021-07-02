@@ -71,14 +71,12 @@ public class Tab2Fragment extends Fragment {
         mGridView = view.findViewById(R.id.gridview); // .xml의 GridView와 연결
         uriArr = new ArrayList<String>();
 
-        if (ContextCompat.checkSelfPermission(context,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_READ_PERMISSION_CODE);
         } else {
             loadImages();
         }
-        mCustomImageAdapter.notifyDataSetChanged();
+
 
         return view;
     }
@@ -114,5 +112,7 @@ public class Tab2Fragment extends Fragment {
                 Toast.makeText(context, mCustomImageAdapter.getItemPath(position), Toast.LENGTH_LONG).show();
             }
         });
+
+        mCustomImageAdapter.notifyDataSetChanged();
     }
 }

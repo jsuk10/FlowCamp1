@@ -75,7 +75,15 @@ public class Tab1Fragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-        readContacts();
+
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            // 사용자에게 권한을 요청합니다.
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS}, 100);
+        } else {
+            // 앱에 이미 권한이있는 경우이 블록이 실행됩니다.
+            readContacts();
+        }
+
         view.findViewById(R.id.tab1_button2).setOnClickListener(v -> addContacts());
         return view;
     }
@@ -84,15 +92,15 @@ public class Tab1Fragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    public void reacContacts(){
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            // 사용자에게 권한을 요청합니다.
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS}, 100);
-        } else {
-            // 앱에 이미 권한이있는 경우이 블록이 실행됩니다.
-            readContacts();
-        }
-    }
+//    public void readContacts(){
+//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+//            // 사용자에게 권한을 요청합니다.
+//            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS}, 100);
+//        } else {
+//            // 앱에 이미 권한이있는 경우이 블록이 실행됩니다.
+//            readContacts();
+//        }
+//    }
 
     public void addContacts(){
         View dialogView = getLayoutInflater().inflate(R.layout.addcontacts, null);
@@ -139,8 +147,7 @@ public class Tab1Fragment extends Fragment {
     }
     // 사용자가 대화 상자에서 ALLOW를 클릭하면이 메서드가 호출됩니다.
     public void onRequestPermissionsResult(int requestCode, String[] permissions,int[] grantResults) {
-        super.onRequestPermissionsResult
-                (requestCode, permissions, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         readContacts();
     }
 
