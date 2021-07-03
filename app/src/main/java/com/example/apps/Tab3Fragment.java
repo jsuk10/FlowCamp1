@@ -5,31 +5,36 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Tab3Fragment extends Fragment {
     private View view;
     private ListView listView;
     String[] items;
-    ArrayList<String> songname;
+    ArrayList<Tab3MusicClass> songname;
     private MediaPlayer mediaPlayer;
     private Context context;
-    ArrayAdapter<String> adapter;
+    ArrayAdapter adapter;
 
     private Button playButton;
     private Button stopButton;
@@ -52,15 +57,36 @@ public class Tab3Fragment extends Fragment {
         songname = new ArrayList<>();
         listView = view.findViewById(R.id.tab3_listView);
         adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1, songname);
+        mediaPlayer  = new MediaPlayer();
         listView.setAdapter(adapter);
         ImageButton button = (ImageButton) view.findViewById(R.id.tab3_PlayButton);
         button.setOnClickListener(v -> playAndStop(view));
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        setListCilck();
         permiction();
+        mediaPlayer.start();
         return view;
     }
 
-    public void playAndStop(View v) {
-        mediaPlayer.start();
+    public void setListCilck(){
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View views, int position, long id) {
+                Tab3MusicClass selected_item = (Tab3MusicClass)songname.get(position);
+                Uri uri = Uri.parse(selected_item.getUri());
+                try {
+                    mediaPlayer.setDataSource(context, uri);
+                    mediaPlayer.start();
+                } catch (IOException e) {
+                    Toast.makeText(getActivity(), "io failed", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                } catch (NullPointerException e){
+                    Toast.makeText(getActivity(), "is null", Toast.LENGTH_SHORT).show();
+                }
+                Toast.makeText(getActivity(), selected_item.getUri(), Toast.LENGTH_SHORT).show();
+                playAndStop(view);
+            }
+        });
     }
 
     public void permiction(){
@@ -83,12 +109,17 @@ public class Tab3Fragment extends Fragment {
         if(cursor!=null){
             while(cursor.moveToNext()){
                 // 사진 경로 Uri 가져오기
-                String name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)).replace(".mp3","").replace(".wav","");
-                songname.add(name);
+                String uri = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)).replace(".mp3","").replace("wav","");
+                songname.add(new Tab3MusicClass(name, uri));
             }
             cursor.close();
         }
         adapter.notifyDataSetChanged();
+    }
+
+    public void playAndStop(View v) {
+        mediaPlayer.start();
     }
 
     public void pause(View v) {
