@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -30,6 +31,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 
 public class Tab2Fragment extends Fragment {
@@ -93,7 +96,6 @@ public class Tab2Fragment extends Fragment {
             loadImages();
         }
 
-
         return view;
     }
 
@@ -126,40 +128,51 @@ public class Tab2Fragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                //Toast.makeText(context, mCustomImageAdapter.getItemPath(position), Toast.LENGTH_LONG).show();
-//                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//                // TestActivity 부분에는 현재 Activity의 이름 입력.
-//                builder.setMessage("AlertDialog 테스트");     // 제목 부분 (직접 작성)
-//                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {      // 버튼1 (직접 작성)
-//                    public void onClick(DialogInterface dialog, int which){
-//                        Toast.makeText(context, "확인 누름", Toast.LENGTH_SHORT).show(); // 실행할 코드
-//                    }
-//                });
-//                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {     // 버튼2 (직접 작성)
-//                    public void onClick(DialogInterface dialog, int which){
-//                        Toast.makeText(context, "취소 누름", Toast.LENGTH_SHORT).show(); // 실행할 코드
-//                    }
-//                });
-//                builder.show();
 
-                AlertDialog.Builder ImageDialog = new AlertDialog.Builder(context);
-
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                 Bitmap imageBitmap = BitmapFactory.decodeFile(uriArr.get(position));
                 ImageView showImage = new ImageView(context);
-                showImage.setImageBitmap(imageBitmap);
-                ImageDialog.setView(showImage);
+                showImage.setImageBitmap(resizeBitmapImage(imageBitmap, 1000, 1500));
 
-                ImageDialog.setNegativeButton("ok", new DialogInterface.OnClickListener()
+                builder.setView(showImage);
+
+                builder.setNegativeButton("close", new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface arg0, int arg1)
                     {
                     }
                 });
-                ImageDialog.show();
+                builder.show();
             }
         });
 
         mCustomImageAdapter.notifyDataSetChanged();
     }
+
+    public Bitmap resizeBitmapImage(Bitmap source, int maxWidthResolution, int maxHeightResolution)
+    {
+        int width = source.getWidth();
+        int height = source.getHeight();
+        int newWidth = width;
+        int newHeight = height;
+        float rate = 0.0f;
+
+        if(width > height) {
+                rate = maxWidthResolution / (float) width;
+                newHeight = (int) (height * rate);
+                newWidth = maxWidthResolution;
+        }
+        else if (width < height) {
+                rate = maxHeightResolution / (float) height;
+                newWidth = (int) (width * rate);
+                newHeight = maxHeightResolution;
+        } else {
+            newWidth = maxWidthResolution;
+            newHeight = maxWidthResolution;
+        }
+
+        return Bitmap.createScaledBitmap(source, newWidth, newHeight, true);
+    }
+
 }
