@@ -28,13 +28,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.ArrayList;
 
 public class Tab1Fragment extends Fragment {
-    EditText name;
-    EditText phone;
-    ListView listView;
-    ArrayList<CustomContext> arrayLists;
-    ArrayAdapter arrayAdapters;
-    SwipeRefreshLayout swipeRefreshLayout;
-    View view;
+    private EditText name;
+    private EditText phone;
+    private ListView listView;
+    private ArrayList<CustomContext> arrayLists;
+    private ArrayAdapter arrayAdapters;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private View view;
 
     public Tab1Fragment() {
         // Required empty public constructor

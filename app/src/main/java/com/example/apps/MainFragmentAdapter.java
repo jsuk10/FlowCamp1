@@ -19,7 +19,7 @@ public class MainFragmentAdapter extends FragmentPagerAdapter {
             case 1:
                 return Tab2Fragment.newInstance();
             case 2:
-                return Tab2Fragment.newInstance();
+                return Tab3Fragment.newInstance();
             default:
                 return null;
         }
