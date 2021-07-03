@@ -7,13 +7,20 @@
     app:layout_constraintBottom_toBottomOf="parent">
 
 
-    <ListView
-        android:id="@+id/tab3_listView"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/tab3_swiperefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@android:color/transparent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tab3_mediaButton"
         android:dividerHeight="10sp"
-        android:padding="8dp"></ListView>
+        android:padding="8dp">
+
+        <ListView
+            android:id="@+id/tab3_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/transparent"></ListView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/tab3_mediaButton"
