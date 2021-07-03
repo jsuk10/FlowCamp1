@@ -4,8 +4,11 @@ package com.example.apps;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -15,9 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -120,7 +125,38 @@ public class Tab2Fragment extends Fragment {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(context, mCustomImageAdapter.getItemPath(position), Toast.LENGTH_LONG).show();
+
+                //Toast.makeText(context, mCustomImageAdapter.getItemPath(position), Toast.LENGTH_LONG).show();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//                // TestActivity 부분에는 현재 Activity의 이름 입력.
+//                builder.setMessage("AlertDialog 테스트");     // 제목 부분 (직접 작성)
+//                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {      // 버튼1 (직접 작성)
+//                    public void onClick(DialogInterface dialog, int which){
+//                        Toast.makeText(context, "확인 누름", Toast.LENGTH_SHORT).show(); // 실행할 코드
+//                    }
+//                });
+//                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {     // 버튼2 (직접 작성)
+//                    public void onClick(DialogInterface dialog, int which){
+//                        Toast.makeText(context, "취소 누름", Toast.LENGTH_SHORT).show(); // 실행할 코드
+//                    }
+//                });
+//                builder.show();
+
+                AlertDialog.Builder ImageDialog = new AlertDialog.Builder(context);
+
+
+                Bitmap imageBitmap = BitmapFactory.decodeFile(uriArr.get(position));
+                ImageView showImage = new ImageView(context);
+                showImage.setImageBitmap(imageBitmap);
+                ImageDialog.setView(showImage);
+
+                ImageDialog.setNegativeButton("ok", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface arg0, int arg1)
+                    {
+                    }
+                });
+                ImageDialog.show();
             }
         });
 
