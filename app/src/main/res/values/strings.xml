@@ -10,10 +10,12 @@
     <string name="Fragment2">Fragment2</string>
     <string name="Fragment3">Fragment3</string>
 
-    <string name="app_name">Photo List</string>
+    <string name="app_name">몰입캠프</string>
 
     <string name="action_delete">Delete all</string>
     <string name="created_at">Created At:</string>
     <string name="image_download_url">https://picsum.photos/200/300/?random</string>
+    <string name="contacts_phone_number">Phone Number</string>
+    <string name="contacts_name">Name</string>
 
 </resources>

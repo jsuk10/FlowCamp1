@@ -23,18 +23,17 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="10dp"
         android:ems="10"
-        android:hint="Name"
+        android:hint="@string/contacts_name"
         android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/tab1_inputNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="false"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="10dp"
         android:ems="10"
-        android:hint="Phone"
+        android:hint="@string/contacts_phone_number"
         android:inputType="phone" />
 
 </LinearLayout>

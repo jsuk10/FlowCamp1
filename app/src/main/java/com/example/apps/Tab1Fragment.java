@@ -99,7 +99,7 @@ public class Tab1Fragment extends Fragment {
         phone = (EditText)dialogView.findViewById(R.id.tab1_inputNumber);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("연락처 추가").setMessage("이름과 번호를 기록해 주세요");
+        builder.setTitle("연락처 추가").setMessage("\n이름과 전화번호를 입력하세요.");
         builder.setView(dialogView);
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){

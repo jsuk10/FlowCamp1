@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadTabName(){
-        tabNames.add("Contracts");
+        tabNames.add("Contacts");
         tabNames.add("Gallery");
-        tabNames.add("secret");
+        tabNames.add("Music");
     }
 
     private void setViewPager() {
