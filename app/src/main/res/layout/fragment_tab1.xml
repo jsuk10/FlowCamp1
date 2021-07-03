@@ -34,10 +34,12 @@
         android:id="@+id/tab1_button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
+        android:layout_marginEnd="30dp"
         android:layout_marginBottom="30dp"
-        android:layout_marginRight="30dp"
+        android:clickable="true"
+        app:tint="@color/white"
+        app:backgroundTint="#673AB7"
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        app:srcCompat="@drawable/icon_add" />
 </androidx.constraintlayout.widget.ConstraintLayout>
