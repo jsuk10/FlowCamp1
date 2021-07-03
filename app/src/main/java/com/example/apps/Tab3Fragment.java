@@ -15,12 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,11 +30,13 @@ import java.util.ArrayList;
 public class Tab3Fragment extends Fragment {
     private View view;
     private ListView listView;
-    ArrayList<Tab3MusicClass> songlist;
+    private ArrayList<Tab3MusicClass> songlist;
     private MediaPlayer mediaPlayer;
     private Context context;
-    Integer postion = 0;
-    ArrayAdapter adapter;
+    private Integer position = 0;
+    private ArrayAdapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ImageButton playAndStopButton;
 
     public Tab3Fragment() {
         // Required empty public constructor
@@ -55,7 +59,18 @@ public class Tab3Fragment extends Fragment {
         view.findViewById(R.id.tab3_PlayButton).setOnClickListener(v -> playAndStop(view));
         view.findViewById(R.id.tab3_beforeButton).setOnClickListener(v -> before(view));
         view.findViewById(R.id.tab3_nextButton).setOnClickListener(v -> next(view));
+        playAndStopButton = view.findViewById(R.id.tab3_PlayButton);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        swipeRefreshLayout = view.findViewById(R.id.tab3_swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                /* swipe 시 진행할 동작 */
+                loadMusic();
+                /* 업데이트가 끝났음을 알림 */
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         setListCilck();
         permiction();
         return view;
@@ -65,7 +80,7 @@ public class Tab3Fragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View views, int position, long id) {
-                postion = position;
+                Tab3Fragment.this.position = position;
                 PlaySound(position);
             }
         });
@@ -98,7 +113,7 @@ public class Tab3Fragment extends Fragment {
             Toast.makeText(getActivity(), "응", Toast.LENGTH_SHORT).show();
         }
         mediaPlayer.start();
-        Toast.makeText(getActivity(), selected_item.getUri(), Toast.LENGTH_SHORT).show();
+        playAndStopButton.setImageResource(android.R.drawable.ic_media_pause);
     }
 
 
@@ -106,11 +121,11 @@ public class Tab3Fragment extends Fragment {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 101);
         } else {
-            loadImages();
+            loadMusic();
         }
     }
 
-    private void loadImages() {
+    private void loadMusic() {
         songlist.clear();
         ContentResolver contentResolver = getActivity().getContentResolver();
         Cursor cursor = contentResolver.query(
@@ -133,23 +148,31 @@ public class Tab3Fragment extends Fragment {
     }
 
     public void playAndStop(View v) {
-        PlaySound(postion);
+        if(mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            playAndStopButton.setImageResource(android.R.drawable.ic_media_play );
+        }
+        else {
+            mediaPlayer.start();
+            playAndStopButton.setImageResource(android.R.drawable.ic_media_pause);
+        }
     }
 
-    public void pause(View v) {
-//        mediaPlayer.seekTo();
-    }
 
     public void next(View v) {
-        if(postion != songlist.size()-1)
-            postion += 1;
-        PlaySound(postion);
+        if(position != songlist.size()-1)
+            position +=1;
+        else
+            position = 0;
+        PlaySound(position);
     }
 
     public void before(View v) {
-        if(postion != 0)
-            postion -= 1;
-        PlaySound(postion);
+        if(position != 0)
+            position -= 1;
+        else
+            position = songlist.size()-1;
+        PlaySound(position);
     }
 
 }
