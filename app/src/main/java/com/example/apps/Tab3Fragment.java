@@ -15,8 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,16 +28,11 @@ import java.util.ArrayList;
 public class Tab3Fragment extends Fragment {
     private View view;
     private ListView listView;
-    String[] items;
-    ArrayList<Tab3MusicClass> songname;
+    ArrayList<Tab3MusicClass> songlist;
     private MediaPlayer mediaPlayer;
     private Context context;
+    Integer postion = 0;
     ArrayAdapter adapter;
-
-    private Button playButton;
-    private Button stopButton;
-    private Button nextButton;
-    private Boolean isPlay;
 
     public Tab3Fragment() {
         // Required empty public constructor
@@ -54,50 +47,71 @@ public class Tab3Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tab3, container, false);
         context = container.getContext();
-        songname = new ArrayList<>();
+        songlist = new ArrayList<>();
         listView = view.findViewById(R.id.tab3_listView);
-        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1, songname);
-        mediaPlayer  = new MediaPlayer();
+        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1, songlist);
+        mediaPlayer = new MediaPlayer();
         listView.setAdapter(adapter);
-        ImageButton button = (ImageButton) view.findViewById(R.id.tab3_PlayButton);
-        button.setOnClickListener(v -> playAndStop(view));
+        view.findViewById(R.id.tab3_PlayButton).setOnClickListener(v -> playAndStop(view));
+        view.findViewById(R.id.tab3_beforeButton).setOnClickListener(v -> before(view));
+        view.findViewById(R.id.tab3_nextButton).setOnClickListener(v -> next(view));
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         setListCilck();
         permiction();
-        mediaPlayer.start();
         return view;
     }
 
-    public void setListCilck(){
+    public void setListCilck() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View views, int position, long id) {
-                Tab3MusicClass selected_item = (Tab3MusicClass)songname.get(position);
-                Uri uri = Uri.parse(selected_item.getUri());
-                try {
-                    mediaPlayer.setDataSource(context, uri);
-                    mediaPlayer.start();
-                } catch (IOException e) {
-                    Toast.makeText(getActivity(), "io failed", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                } catch (NullPointerException e){
-                    Toast.makeText(getActivity(), "is null", Toast.LENGTH_SHORT).show();
-                }
-                Toast.makeText(getActivity(), selected_item.getUri(), Toast.LENGTH_SHORT).show();
-                playAndStop(view);
+                postion = position;
+                PlaySound(position);
             }
         });
     }
 
-    public void permiction(){
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+    public void PlaySound(Integer position) {
+        Tab3MusicClass selected_item = (Tab3MusicClass) songlist.get(position);
+        Uri uri = Uri.parse(selected_item.getUri());
+//        if (mediaPlayer.isPlaying())
+            mediaPlayer.reset();
+
+
+        try {
+            mediaPlayer.setDataSource(context, uri);
+        } catch (IOException e) {
+            Toast.makeText(getActivity(), "Uri io failed", Toast.LENGTH_SHORT).show();
+        } catch (NullPointerException e) {
+            Toast.makeText(getActivity(), "Uri is null", Toast.LENGTH_SHORT).show();
+        } catch (IllegalStateException e) {
+            Toast.makeText(getActivity(), "Uri state wrong응", Toast.LENGTH_SHORT).show();
+        }
+
+        try {
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            Toast.makeText(getActivity(), "io failed", Toast.LENGTH_SHORT).show();
+        } catch (NullPointerException e) {
+            Toast.makeText(getActivity(), "is null", Toast.LENGTH_SHORT).show();
+        } catch (IllegalStateException e) {
+            Toast.makeText(getActivity(), "응", Toast.LENGTH_SHORT).show();
+        }
+        mediaPlayer.start();
+        Toast.makeText(getActivity(), selected_item.getUri(), Toast.LENGTH_SHORT).show();
+    }
+
+
+    public void permiction() {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 101);
         } else {
             loadImages();
         }
     }
+
     private void loadImages() {
-        songname.clear();
+        songlist.clear();
         ContentResolver contentResolver = getActivity().getContentResolver();
         Cursor cursor = contentResolver.query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -106,12 +120,12 @@ public class Tab3Fragment extends Fragment {
                 null,
                 null);
 
-        if(cursor!=null){
-            while(cursor.moveToNext()){
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
                 // 사진 경로 Uri 가져오기
                 String uri = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                String name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)).replace(".mp3","").replace("wav","");
-                songname.add(new Tab3MusicClass(name, uri));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)).replace(".mp3", "").replace("wav", "");
+                songlist.add(new Tab3MusicClass(name, uri));
             }
             cursor.close();
         }
@@ -119,7 +133,7 @@ public class Tab3Fragment extends Fragment {
     }
 
     public void playAndStop(View v) {
-        mediaPlayer.start();
+        PlaySound(postion);
     }
 
     public void pause(View v) {
@@ -127,18 +141,15 @@ public class Tab3Fragment extends Fragment {
     }
 
     public void next(View v) {
-        mediaPlayer.pause();
-
-//        mediaPlayer.setNextMediaPlayer();
+        if(postion != songlist.size()-1)
+            postion += 1;
+        PlaySound(postion);
     }
 
     public void before(View v) {
-        mediaPlayer.pause();
-    }
-
-    private void getMusicData() {
-
-
+        if(postion != 0)
+            postion -= 1;
+        PlaySound(postion);
     }
 
 }
