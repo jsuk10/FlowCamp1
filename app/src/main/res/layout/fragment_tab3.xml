@@ -56,6 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_toLeftOf="@id/tab3_PlayButton"
+            android:background="@drawable/selector_view"
             app:srcCompat="@android:drawable/ic_media_rew" />
 
         <ImageButton
@@ -64,6 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_toLeftOf="@id/tab3_nextButton"
+            android:background="@drawable/selector_view"
             app:srcCompat="@android:drawable/ic_media_play" />
 
         <ImageButton
@@ -72,6 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_alignParentRight="true"
+            android:background="@drawable/selector_view"
             app:srcCompat="@android:drawable/ic_media_ff" />
 
     </RelativeLayout>
