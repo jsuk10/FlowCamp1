@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -26,6 +27,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class Tab1Fragment extends Fragment {
@@ -99,6 +102,7 @@ public class Tab1Fragment extends Fragment {
         name = (EditText) dialogView.findViewById(R.id.tab1_inputName);
         phone = (EditText) dialogView.findViewById(R.id.tab1_inputNumber);
 
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("연락처 추가").setMessage("\n이름과 전화번호를 입력하세요.");
         builder.setView(dialogView);
@@ -141,11 +145,19 @@ public class Tab1Fragment extends Fragment {
         readContacts();
     }
 
+    private Drawable resize(Drawable image) {
+        Bitmap b = ((BitmapDrawable)image).getBitmap();
+        Bitmap bitmapResized = Bitmap.createScaledBitmap(b, 130, 130, false);
+        return new BitmapDrawable(getResources(), bitmapResized);
+    }
+
     //콘텐츠 리졸버를 사용하여 연락처를 읽는 함수
     private void readContacts() {
         Drawable icon = ContextCompat.getDrawable(view.getContext(), R.drawable.ic_contact_default);
         String name = "not";
         String number = "dont Have";
+        String potoid = null;
+        Drawable yourDrawable;
         arrayLists.clear();
         ContentResolver contentResolver = getActivity().getContentResolver();
         Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
@@ -153,6 +165,7 @@ public class Tab1Fragment extends Fragment {
             do {
                 name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                potoid = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
                 Integer hasPhone = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
                 if (hasPhone > 0) {
                     Cursor cp = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
@@ -162,7 +175,16 @@ public class Tab1Fragment extends Fragment {
                         cp.close();
                     }
                 }
-                arrayLists.add(new Tab1ListViewItem(icon, name, number));
+                try {
+                    InputStream inputStream = getActivity().getContentResolver().openInputStream(Uri.parse(potoid));
+                    yourDrawable = Drawable.createFromStream(inputStream, potoid );
+                    yourDrawable = resize(yourDrawable);
+                } catch (FileNotFoundException e) {
+                    yourDrawable = icon;
+                }catch (NullPointerException e) {
+                    yourDrawable = icon;
+                }
+                arrayLists.add(new Tab1ListViewItem(yourDrawable, name, number));
             } while (cursor.moveToNext());
             //adapter.notifyDataSetChanged();
             adapter.setList(arrayLists);

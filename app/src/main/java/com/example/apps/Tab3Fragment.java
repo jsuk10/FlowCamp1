@@ -94,8 +94,10 @@ public class Tab3Fragment extends Fragment {
         txtCurrArtist = (TextView) view.findViewById(R.id.tab3_txtArtist);
 
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        swipeRefreshLayout = view.findViewById(R.id.tab3_swipeRefresh);
+        swipeRefreshLayout = view.findViewById(R.id.tab3_swiperefresh);
+        mediaPlayer.pause();
     }
+    
     public void addButtonEvent(){
         view.findViewById(R.id.tab3_playButton).setOnClickListener(v -> playAndStop(view));
         view.findViewById(R.id.tab3_prevButton).setOnClickListener(v -> prev(view));
@@ -186,8 +188,9 @@ public class Tab3Fragment extends Fragment {
             btnPlayAndStop.setImageResource(android.R.drawable.ic_media_play);
         }
         else {
-            mediaPlayer.start();
-            btnPlayAndStop.setImageResource(android.R.drawable.ic_media_pause);
+            PlaySound(position);
+//            mediaPlayer.start();
+            playAndStopButton.setImageResource(android.R.drawable.ic_media_pause);
         }
     }
 
