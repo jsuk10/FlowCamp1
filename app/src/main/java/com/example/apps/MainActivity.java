@@ -1,6 +1,7 @@
 package com.example.apps;
 
 import android.annotation.TargetApi;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -44,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FF0000"));
+        tabLayout.setTabTextColors(Color.parseColor("#ffffff"), Color.parseColor("#ff0000"));
+
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

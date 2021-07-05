@@ -60,7 +60,7 @@ public class Tab2GalleryAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            imageView.setPadding(8, 8, 8, 8);
+            //imageView.setPadding(3, 3, 3, 3);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, GridView.LayoutParams.MATCH_PARENT));
 
@@ -70,7 +70,7 @@ public class Tab2GalleryAdapter extends BaseAdapter {
         BitmapFactory.Options bo = new BitmapFactory.Options();
         bo.inSampleSize = 8;
         bm = BitmapFactory.decodeFile(mItems.get(position), bo);
-        Bitmap mThumbnail = ThumbnailUtils.extractThumbnail(bm, 300, 300);
+        Bitmap mThumbnail = ThumbnailUtils.extractThumbnail(bm, 350, 350);
         imageView.setImageBitmap(mThumbnail);
 
         if (bm != null && !bm.isRecycled()) {

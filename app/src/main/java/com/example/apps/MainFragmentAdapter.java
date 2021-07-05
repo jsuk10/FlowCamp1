@@ -14,14 +14,10 @@ public class MainFragmentAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position){
-            case 0:
-                return Tab1Fragment.newInstance();
-            case 1:
-                return Tab2Fragment.newInstance();
-            case 2:
-                return Tab3Fragment.newInstance();
-            default:
-                return null;
+            case 0: return Tab1Fragment.newInstance();
+            case 1: return Tab2Fragment.newInstance();
+            case 2: return Tab3Fragment.newInstance();
+            default: return null;
         }
     }
     @Override

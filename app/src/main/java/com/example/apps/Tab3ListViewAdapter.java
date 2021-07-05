@@ -1,6 +1,7 @@
 package com.example.apps;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,7 @@ public class Tab3ListViewAdapter extends BaseAdapter {
         Tab3ListViewItem listViewItem = listViewItemList.get(position);
 
         // 아이템 내 각 위젯에 데이터 반영
+        //albumCoverImageView.setImageBitmap(listViewItem.getAlbumArt());
         albumCoverImageView.setImageDrawable(listViewItem.getAlbumArt());
         titleTextView.setText(listViewItem.getTitle());
         artistTextView.setText(listViewItem.getArtist());
@@ -64,18 +66,6 @@ public class Tab3ListViewAdapter extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         return listViewItemList.get(position);
-    }
-
-    // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-    public void addItem(Drawable album_cover, String title, String artist, String uri) {
-        Tab3ListViewItem item = new Tab3ListViewItem();
-
-        item.setAlbumArt(album_cover);
-        item.setTitle(title);
-        item.setArtist(artist);
-        item.setUri(uri);
-
-        listViewItemList.add(item);
     }
 
     public void setList(ArrayList<Tab3ListViewItem> list){

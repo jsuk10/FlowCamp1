@@ -2,15 +2,19 @@ package com.example.apps;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +31,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -73,7 +78,7 @@ public class Tab3Fragment extends Fragment {
             }
         });
         setListCilck();
-        permiction();
+        permissionCheck();
         return view;
     }
 
@@ -148,7 +153,7 @@ public class Tab3Fragment extends Fragment {
     }
 
 
-    public void permiction() {
+    public void permissionCheck() {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 101);
         } else {
@@ -157,7 +162,7 @@ public class Tab3Fragment extends Fragment {
     }
 
     private void loadMusic() {
-        Drawable album_cover = ContextCompat.getDrawable(view.getContext(), R.drawable.ic_contact_default);
+        Drawable album_art = ContextCompat.getDrawable(view.getContext(), R.drawable.ic_contact_default);
         songlist.clear();
         ContentResolver contentResolver = getActivity().getContentResolver();
         Cursor cursor = contentResolver.query(
@@ -169,11 +174,11 @@ public class Tab3Fragment extends Fragment {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-
+                //Bitmap album_art = BitmapFactory.decodeFile(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART)));
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)).replace(".mp3", "").replace("wav", "");
                 String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST));
                 String uri = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                songlist.add(new Tab3ListViewItem(album_cover, title, artist, uri));
+                songlist.add(new Tab3ListViewItem(album_art, title, artist, uri));
             }
             cursor.close();
         }
