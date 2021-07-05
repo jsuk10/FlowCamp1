@@ -1,11 +1,21 @@
 package com.example.apps;
 
+import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -14,14 +24,17 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    static ArrayList<MusicFiles> musicFiles = new ArrayList<>();
     private TabLayout tabLayout;
-    final private ArrayList <String> tabNames = new ArrayList<>();
+    final private ArrayList<String> tabNames = new ArrayList<>();
+    public static final int REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        permission();
         loadTabName();
         setTabLayout();
         setViewPager();
@@ -29,12 +42,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.N)
-    private void setTabLayout(){
+    private void setTabLayout() {
         tabLayout = findViewById(R.id.tab);
-        tabNames.forEach(name ->tabLayout.addTab(tabLayout.newTab().setText(name)));
+        tabNames.forEach(name -> tabLayout.addTab(tabLayout.newTab().setText(name)));
     }
 
-    private void loadTabName(){
+    private void loadTabName() {
         tabNames.add("Contacts");
         tabNames.add("Gallery");
         tabNames.add("Music");
@@ -53,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
 
@@ -64,4 +78,55 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == REQUEST_CODE){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                musicFiles = getAllAudio(this);
+            }
+        }else{
+            permission();
+        }
+    }
+    private void permission() {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+        } else {
+            musicFiles = getAllAudio(this);
+        }
+    }
+
+
+    public static ArrayList<MusicFiles> getAllAudio(Context context) {
+        ArrayList<MusicFiles> tempAudioList = new ArrayList<>();
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String[] items = {
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.ARTIST,
+        };
+        Cursor cursor = context.getContentResolver().query(uri, items,
+                null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String album = cursor.getString(0);
+                String title = cursor.getString(1);
+                String duration = cursor.getString(2);
+                String path = cursor.getString(3);
+                String artist = cursor.getString(4);
+                MusicFiles item = new MusicFiles(path, title, artist, album, duration);
+                Log.e("Path" + path, "Album : " + album);
+                tempAudioList.add(item);
+            }
+            cursor.close();
+        }
+        return tempAudioList;
+    }
+
+
 }
