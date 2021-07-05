@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -37,6 +38,7 @@ public class Tab3Fragment extends Fragment {
     private ArrayAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ImageButton playAndStopButton;
+    private TextView text;
 
     public Tab3Fragment() {
         // Required empty public constructor
@@ -51,17 +53,9 @@ public class Tab3Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tab3, container, false);
         context = container.getContext();
-        songlist = new ArrayList<>();
-        listView = view.findViewById(R.id.tab3_listView);
-        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1, songlist);
-        mediaPlayer = new MediaPlayer();
-        listView.setAdapter(adapter);
-        view.findViewById(R.id.tab3_PlayButton).setOnClickListener(v -> playAndStop(view));
-        view.findViewById(R.id.tab3_beforeButton).setOnClickListener(v -> before(view));
-        view.findViewById(R.id.tab3_nextButton).setOnClickListener(v -> next(view));
-        playAndStopButton = view.findViewById(R.id.tab3_PlayButton);
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        swipeRefreshLayout = view.findViewById(R.id.tab3_swiperefresh);
+        init();
+        addButtonEvent();
+        setMoveText();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -74,6 +68,29 @@ public class Tab3Fragment extends Fragment {
         setListCilck();
         permiction();
         return view;
+    }
+
+    private void setMoveText() {
+        text.setSelected(true);
+//        listView.setSelected(true);
+//        listView.requestFocus();
+    }
+
+    public void init(){
+        listView = view.findViewById(R.id.tab3_listView);
+        songlist = new ArrayList<>();
+        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1, songlist);
+        mediaPlayer = new MediaPlayer();
+        listView.setAdapter(adapter);
+        playAndStopButton = view.findViewById(R.id.tab3_PlayButton);
+        text = (TextView) view.findViewById(R.id.tab3_musicTitle);
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        swipeRefreshLayout = view.findViewById(R.id.tab3_swiperefresh);
+    }
+    public void addButtonEvent(){
+        view.findViewById(R.id.tab3_PlayButton).setOnClickListener(v -> playAndStop(view));
+        view.findViewById(R.id.tab3_beforeButton).setOnClickListener(v -> before(view));
+        view.findViewById(R.id.tab3_nextButton).setOnClickListener(v -> next(view));
     }
 
     public void setListCilck() {
@@ -90,8 +107,8 @@ public class Tab3Fragment extends Fragment {
         Tab3MusicClass selected_item = (Tab3MusicClass) songlist.get(position);
         Uri uri = Uri.parse(selected_item.getUri());
 //        if (mediaPlayer.isPlaying())
-            mediaPlayer.reset();
-
+        mediaPlayer.reset();
+        text.setText(selected_item.toString());
 
         try {
             mediaPlayer.setDataSource(context, uri);
