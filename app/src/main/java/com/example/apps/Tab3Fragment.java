@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ public class Tab3Fragment extends Fragment {
     private Integer position = 0;
     private Tab3ListViewAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    //private SeekBar seekBar;
     private ImageButton btnPlayAndStop;
 
 
@@ -77,6 +79,7 @@ public class Tab3Fragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+
         setListCilck();
         permissionCheck();
         return view;
@@ -87,11 +90,15 @@ public class Tab3Fragment extends Fragment {
     }
 
     public void init(){
-        listView = view.findViewById(R.id.tab3_listView);
         songlist = new ArrayList<>();
         adapter = new Tab3ListViewAdapter();
         mediaPlayer = new MediaPlayer();
+
+        listView = view.findViewById(R.id.tab3_listView);
         listView.setAdapter(adapter);
+
+        swipeRefreshLayout = view.findViewById(R.id.tab3_swipeRefresh);
+        //seekBar = view.findViewById(R.id.tab3_seekBar);
         btnPlayAndStop = view.findViewById(R.id.tab3_playButton);
 
         imgCurrAlbumArt = (ImageView) view.findViewById(R.id.tab3_imgAlbumArt);
@@ -99,7 +106,6 @@ public class Tab3Fragment extends Fragment {
         txtCurrArtist = (TextView) view.findViewById(R.id.tab3_txtArtist);
 
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        swipeRefreshLayout = view.findViewById(R.id.tab3_swipeRefresh);
         mediaPlayer.pause();
     }
     
