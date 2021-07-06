@@ -31,7 +31,8 @@
                 android:listSelector="@android:color/transparent"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
-                android:singleLine="true"></ListView>
+                android:singleLine="true">
+            </ListView>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -41,13 +42,13 @@
         android:id="@+id/tab3_duration"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/transparent"
         android:layout_above="@id/tab3_musicBar">
 
         <TextView
             android:id="@+id/tab3_durationPlay"
+            android:layout_marginStart="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
@@ -56,6 +57,7 @@
 
         <TextView
             android:id="@+id/tab3_durationEnd"
+            android:layout_marginEnd="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
@@ -64,6 +66,12 @@
 
         <SeekBar
             android:id="@+id/tab3_seekBar"
+            android:background="@drawable/bg_seekbar"
+            android:progressTint="@color/red"
+            android:progressBackgroundTint="#FFFFFF"
+            android:thumbTint="@color/red"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"/>

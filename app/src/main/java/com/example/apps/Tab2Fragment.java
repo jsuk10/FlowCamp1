@@ -106,7 +106,7 @@ public class Tab2Fragment extends Fragment {
                 null,
                 null,
                 null,
-                MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+                MediaStore.Images.ImageColumns.TITLE + " ASC");
 
         if(cursor!=null){
             while(cursor.moveToNext()){
