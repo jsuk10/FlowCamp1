@@ -32,7 +32,7 @@ and Reads data, and List up files.
 
 Icon|
 ---|
-![icon](./images/icon_madcamp.png)|
+![icon](./img/icon_madcamp.png)|
 [APK file link](https://drive.google.com/file/d/1C3vrMhj9cooshJgfzQY92SEJI-FF-Wfr/view?usp=sharing)|
 
 
@@ -45,7 +45,7 @@ Icon|
 3. When you slide up, a refresh effect occurs and the window is refreshed
      Get data again
 <p align="center"> 
-   <img src="./images/total.gif"> 
+   <img src="./img/total.gif"> 
 </p> 
 
 ## Tab Common Features
@@ -61,7 +61,7 @@ Icon|
 2. When each contact is clicked, the phone's calling function is turned on immediately to make a call possible.
 3. By adding a floating action button, a dialog is output when clicked
    - Add a name and number to a contact when inputing a name and number in text in the dialog
-<p align="center"> <img src="./images/tab1.gif"> </p> 
+<p align="center"> <img src="./img/tab1.gif"> </p> 
 
 ---
 
@@ -71,7 +71,7 @@ Icon|
    - In this case, it is written as (n x n) according to the size of the mobile phone.
 2. When click each image, the image is enlarged
    - Click outside the enlarged image to close the dialog
-<p align="center"> <img src="./images/tab2.gif"> </p> 
+<p align="center"> <img src="./img/tab2.gif"> </p> 
 
 ---
 
@@ -90,7 +90,7 @@ Icon|
      - If the title is long, it will slowly move to the left.
 6. Play in the background
      - Lock your phone or Switch apps, and you'll see the music.
-<p align="center"> <img src="./images/tab3.gif"> </p> 
+<p align="center"> <img src="./img/tab3.gif"> </p> 
 ---
 
 # Design References in YouTube
