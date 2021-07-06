@@ -95,5 +95,5 @@ Icon|
 
 # Design References in YouTube
 
-![inapp](./images/ref.png)
+![inapp](./img/ref.png)
 [YouTube](https://www.youtube.com)
