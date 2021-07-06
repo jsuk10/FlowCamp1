@@ -2,10 +2,10 @@ package com.example.apps;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 
 public class Tab3ListViewItem {
-    private Bitmap albumartBitmap;
-    private Drawable albumartDrawable;
+    private Uri albumartUri;
     private String titleStr ;
     private String artistStr ;
     private String uriStr ;
@@ -13,25 +13,16 @@ public class Tab3ListViewItem {
     public Tab3ListViewItem() {
 
     }
-    public Tab3ListViewItem(Bitmap album_art, String name, String artist, String uri) {
-        this.albumartBitmap = album_art;
+    public Tab3ListViewItem(Uri album_art, String name, String artist, String uri) {
+        this.albumartUri = album_art;
         this.titleStr = name;
         this.artistStr = artist;
         this.uriStr = uri;
     }
 
-    public Tab3ListViewItem(Drawable album_art, String name, String artist, String uri) {
-        this.albumartDrawable = album_art;
-        this.titleStr = name;
-        this.artistStr = artist;
-        this.uriStr = uri;
-    }
 
-    public void setAlbumArt(Bitmap album_art) {
-        albumartBitmap = album_art ;
-    }
-    public void setAlbumArt(Drawable album_art) {
-        albumartDrawable = album_art ;
+    public void setAlbumArt(Uri album_art) {
+        albumartUri = album_art ;
     }
     public void setTitle(String title) {
         titleStr = title ;
@@ -43,8 +34,7 @@ public class Tab3ListViewItem {
         uriStr = uri ;
     }
 
-    //public Bitmap getAlbumArt() { return this.albumartBitmap ; }
-    public Drawable getAlbumArt() { return this.albumartDrawable ; }
+    public Uri getAlbumArt() { return this.albumartUri ; }
     public String getTitle() {
         return this.titleStr ;
     }

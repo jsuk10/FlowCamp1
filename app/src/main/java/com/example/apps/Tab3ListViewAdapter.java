@@ -49,7 +49,7 @@ public class Tab3ListViewAdapter extends BaseAdapter {
 
         // 아이템 내 각 위젯에 데이터 반영
         //albumCoverImageView.setImageBitmap(listViewItem.getAlbumArt());
-        albumCoverImageView.setImageDrawable(listViewItem.getAlbumArt());
+        albumCoverImageView.setImageURI(listViewItem.getAlbumArt());
         titleTextView.setText(listViewItem.getTitle());
         artistTextView.setText(listViewItem.getArtist());
 
