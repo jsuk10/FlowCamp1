@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/black">
+    android:background="@color/black"
+    android:orientation="vertical">
+
 
     <RelativeLayout
         android:id="@+id/tab3_musicList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/tab3_musicBar">
+        android:layout_above="@id/tab3_duration">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/tab3_swipeRefresh"
@@ -25,45 +25,65 @@
                 android:id="@+id/tab3_listView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawSelectorOnTop="true"
-                android:listSelector="@android:color/transparent"
                 android:divider="@color/white"
+                android:drawSelectorOnTop="true"
                 android:ellipsize="marquee"
+                android:listSelector="@android:color/transparent"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
-                android:singleLine="true">
-            </ListView>
+                android:singleLine="true"></ListView>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
 
-<!--    <TextView-->
-<!--        android:id="@+id/tab3_txtSeekBar"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content" />-->
+    <RelativeLayout
+        android:id="@+id/tab3_duration"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@id/tab3_musicBar">
 
-<!--    <seekBar-->
-<!--        android:id="@+id/tab3_seekBar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_above="@id/tab3_musicBar"/>-->
+        <TextView
+            android:id="@+id/tab3_durationPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_alignParentStart="true"
+            android:text="0:00" />
+
+        <TextView
+            android:id="@+id/tab3_durationEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_alignParentEnd="true"
+            android:text="--:--" />
+
+        <SeekBar
+            android:id="@+id/tab3_seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/tab3_musicBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:background="@color/almostblack">
+        android:background="@color/almostblack"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/tab3_imgAlbumArt"
-            android:layout_margin="10dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentStart = "true"
+            android:layout_margin="10dp"
             tools:ignore="ContentDescription" />
 
         <LinearLayout
@@ -71,8 +91,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/tab3_imgAlbumArt"
             android:layout_toStartOf="@id/tab3_prevButton"
+            android:layout_toEndOf="@id/tab3_imgAlbumArt"
             android:orientation="vertical">
 
             <TextView
@@ -90,7 +110,7 @@
                 android:text="Title"
                 android:textColor="@color/white"
                 android:textSize="15sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tab3_txtArtist"
@@ -112,9 +132,9 @@
             android:id="@+id/tab3_prevButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_centerVertical="true"
             android:layout_marginVertical="10dp"
             android:layout_toStartOf="@id/tab3_playButton"
-            android:layout_centerVertical="true"
             android:background="@drawable/bg_white_ripple"
             app:srcCompat="@android:drawable/ic_media_rew" />
 
@@ -122,9 +142,9 @@
             android:id="@+id/tab3_playButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_centerVertical="true"
             android:layout_marginVertical="10dp"
             android:layout_toStartOf="@id/tab3_nextButton"
-            android:layout_centerVertical="true"
             android:background="@drawable/bg_white_ripple"
             app:srcCompat="@android:drawable/ic_media_play" />
 
@@ -132,14 +152,12 @@
             android:id="@+id/tab3_nextButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginVertical="10dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:layout_marginVertical="10dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/bg_white_ripple"
             app:srcCompat="@android:drawable/ic_media_ff" />
-
-
     </RelativeLayout>
 
 </RelativeLayout>

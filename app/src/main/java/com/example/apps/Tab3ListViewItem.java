@@ -1,7 +1,5 @@
 package com.example.apps;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
 public class Tab3ListViewItem {
@@ -9,15 +7,17 @@ public class Tab3ListViewItem {
     private String titleStr ;
     private String artistStr ;
     private String uriStr ;
+    private String duration ;
 
     public Tab3ListViewItem() {
 
     }
-    public Tab3ListViewItem(Uri album_art, String name, String artist, String uri) {
+    public Tab3ListViewItem(Uri album_art, String name, String artist, String uri, String duration) {
         this.albumartUri = album_art;
         this.titleStr = name;
         this.artistStr = artist;
         this.uriStr = uri;
+        this.duration = duration;
     }
 
 
@@ -44,7 +44,9 @@ public class Tab3ListViewItem {
     public String getUri() {
         return this.uriStr ;
     }
-
+    public String getDuration() {
+        return this.duration ;
+    }
     @Override
     public String toString() {
         return titleStr;
