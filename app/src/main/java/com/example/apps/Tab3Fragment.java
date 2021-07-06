@@ -40,7 +40,6 @@ public class Tab3Fragment extends Fragment {
     private Context context;
     private Integer position = 0;
     private Integer Maxduration = 999999;
-    private Integer stopTime = 0;
     private Tab3ListViewAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ImageButton btnPlayAndStop;
@@ -181,7 +180,6 @@ public class Tab3Fragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View views, int position, long id) {
                 Tab3Fragment.this.position = position;
-                stopTime = 0;
                 PlaySound(position);
             }
         });
@@ -224,7 +222,6 @@ public class Tab3Fragment extends Fragment {
             Toast.makeText(getActivity(), "응", Toast.LENGTH_SHORT).show();
         }
         mediaPlayer.start();
-        mediaPlayer.seekTo(stopTime);
         btnPlayAndStop.setImageResource(android.R.drawable.ic_media_pause);
     }
 
@@ -266,18 +263,16 @@ public class Tab3Fragment extends Fragment {
 
     public void playAndStop(View v) {
         if (mediaPlayer.isPlaying()) {
-            stopTime = mediaPlayer.getDuration();
             mediaPlayer.pause();
             btnPlayAndStop.setImageResource(android.R.drawable.ic_media_play);
         } else {
-            PlaySound(position);
+            mediaPlayer.start();
             btnPlayAndStop.setImageResource(android.R.drawable.ic_media_pause);
         }
     }
 
 
     public void next(View v) {
-        stopTime=0;
         if (position != songlist.size() - 1)
             position += 1;
         else
@@ -286,7 +281,6 @@ public class Tab3Fragment extends Fragment {
     }
 
     public void prev(View v) {
-        stopTime =0;
         if (position != 0)
             position -= 1;
         else
