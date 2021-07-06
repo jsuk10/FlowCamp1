@@ -55,7 +55,7 @@ public class Tab3Fragment extends Fragment {
 
     private Handler handler = new Handler();
 
-    private Thread playThread,nextThread,beforeThread;
+    private Thread playThread, nextThread, beforeThread;
     private Tab3ListViewItem itemCurrMusic;
 
     public Tab3Fragment() {
@@ -64,7 +64,7 @@ public class Tab3Fragment extends Fragment {
 
     public static Tab3Fragment newInstance() {
         Tab3Fragment tab3_fragment = new Tab3Fragment();
-        Log.e("hello","New Instance");
+        Log.e("hello", "New Instance");
         return tab3_fragment;
     }
 
@@ -75,6 +75,7 @@ public class Tab3Fragment extends Fragment {
         musicList = new ArrayList<>();
         adapter = new Tab3ListViewAdapter();
         mediaPlayer = new MediaPlayer();
+        mediaPlayer.reset();
         position = 0;
     }
 
@@ -105,12 +106,12 @@ public class Tab3Fragment extends Fragment {
     }
 
     public void init() {
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
-            public void onCompletion (MediaPlayer mp){
-                seekbar.setProgress(0);
-//                next(view);
-            }
-        });
+//        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//            public void onCompletion(MediaPlayer mp) {
+//                seekbar.setProgress(0);
+//                //next(view);
+//            }
+//        });
         listView = view.findViewById(R.id.tab3_listView);
         listView.setAdapter(adapter);
 
@@ -125,6 +126,7 @@ public class Tab3Fragment extends Fragment {
         playTime = (TextView) view.findViewById(R.id.tab3_durationPlay);
         endTime = (TextView) view.findViewById(R.id.tab3_durationEnd);
 
+        seekbar.setMax(Maxduration);
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -150,11 +152,13 @@ public class Tab3Fragment extends Fragment {
                         if (mediaPlayer != null) {
                             int currentPostion = mediaPlayer.getCurrentPosition() / 1000;
                             playTime.setText(formattendTime(currentPostion));
-                                seekbar.setProgress(currentPostion);
-//                            if (currentPostion >= Maxduration && isTracking == false && mediaPlayer.isPlaying()) {
-//                                seekbar.setProgress(0);
-//                                next(view);
-//                            }
+                            seekbar.setProgress(currentPostion);
+
+                            if(seekbar.getProgress() == seekbar.getMax()) {
+                                seekbar.setProgress(0);
+                                next(view);
+                            }
+
                         }
                         handler.postDelayed(this, 1000);
                     }
@@ -162,12 +166,14 @@ public class Tab3Fragment extends Fragment {
             }
         }).start();
 
-        if(itemCurrMusic != null) {
+        if (itemCurrMusic != null) {
             imgCurrAlbumArt.setImageURI(itemCurrMusic.getAlbumArt());
             txtCurrTitle.setText(itemCurrMusic.getTitle());
             txtCurrArtist.setText(itemCurrMusic.getArtist());
+            endTime.setText(formattendTime(Integer.parseInt(itemCurrMusic.getDuration()) / 1000));
+            seekbar.setMax(Integer.parseInt(itemCurrMusic.getDuration()) / 1000);
         }
-        if(mediaPlayer.isPlaying()) {
+        if (mediaPlayer.isPlaying()) {
             btnPlayAndStop.setImageResource(android.R.drawable.ic_media_pause);
         } else {
             btnPlayAndStop.setImageResource(android.R.drawable.ic_media_play);
@@ -203,7 +209,6 @@ public class Tab3Fragment extends Fragment {
 
     public void playMusic(Integer position) {
         this.position = position;
-
         mediaPlayer.reset();
 
         itemCurrMusic = musicList.get(position);
@@ -212,10 +217,9 @@ public class Tab3Fragment extends Fragment {
         txtCurrTitle.setText(itemCurrMusic.getTitle());
         txtCurrArtist.setText(itemCurrMusic.getArtist());
 
+        Maxduration = Integer.parseInt(itemCurrMusic.getDuration()) / 1000;
         seekbar.setMax(Integer.parseInt(itemCurrMusic.getDuration()) / 1000);
         playTime.setText(formattendTime(mediaPlayer.getDuration() / 1000));
-        Maxduration = Integer.parseInt(itemCurrMusic.getDuration()) / 1000;
-
         endTime.setText(formattendTime(Integer.parseInt(itemCurrMusic.getDuration()) / 1000));
 
         try {
@@ -266,7 +270,7 @@ public class Tab3Fragment extends Fragment {
                 Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
                 Uri sAlbumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
 
-                musicList.add(new Tab3ListViewItem(sAlbumArtUri, title, artist, uri,duration));
+                musicList.add(new Tab3ListViewItem(sAlbumArtUri, title, artist, uri, duration));
 
             }
             cursor.close();
@@ -281,18 +285,19 @@ public class Tab3Fragment extends Fragment {
             mediaPlayer.pause();
             btnPlayAndStop.setImageResource(android.R.drawable.ic_media_play);
         } else {
-            mediaPlayer.start();
-        // }
-        // else {
-        //     playMusic(position);
-            btnPlayAndStop.setImageResource(android.R.drawable.ic_media_pause);
+            if (itemCurrMusic == null) {
+                playMusic(position);
+            } else {
+                mediaPlayer.start();
+                btnPlayAndStop.setImageResource(android.R.drawable.ic_media_pause);
+            }
         }
     }
 
 
     public void next(View v) {
-        if(position != musicList.size()-1)
-            position +=1;
+        if (position != musicList.size() - 1)
+            position += 1;
         else
             position = 0;
         playMusic(position);
@@ -302,7 +307,7 @@ public class Tab3Fragment extends Fragment {
         if (position != 0)
             position -= 1;
         else
-            position = musicList.size()-1;
+            position = musicList.size() - 1;
         playMusic(position);
     }
 
