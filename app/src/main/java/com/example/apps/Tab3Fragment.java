@@ -1,44 +1,35 @@
 package com.example.apps;
 
-import android.Manifest;
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
-import java.util.ArrayList;
+
+import static com.example.apps.MainActivity.musicFile;
 
 public class Tab3Fragment extends Fragment {
     private View view;
-    private ListView listView;
-    private ArrayList<Tab3ListViewItem> songlist;
+
+    RecyclerView recyclerView;
+//    private ArrayList<Tab3ListViewItem> songlist;
     private MediaPlayer mediaPlayer;
     private Context context;
     private Integer position = 0;
@@ -64,7 +55,15 @@ public class Tab3Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tab3, container, false);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
         context = container.getContext();
+
+        if(!(musicFile.size()<1)) {
+            adapter = new Tab3ListViewAdapter(getContext(), musicFile);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        }
         init();
         addButtonEvent();
         setMoveText();
@@ -72,13 +71,12 @@ public class Tab3Fragment extends Fragment {
             @Override
             public void onRefresh() {
                 /* swipe 시 진행할 동작 */
-                loadMusic();
+//                loadMusic();
                 /* 업데이트가 끝났음을 알림 */
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-        setListCilck();
-        permissionCheck();
+//        permissionCheck();
         return view;
     }
 
@@ -86,12 +84,9 @@ public class Tab3Fragment extends Fragment {
         txtCurrTitle.setSelected(true);
     }
 
-    public void init(){
-        listView = view.findViewById(R.id.tab3_listView);
-        songlist = new ArrayList<>();
+    public void init() {
         adapter = new Tab3ListViewAdapter();
         mediaPlayer = new MediaPlayer();
-        listView.setAdapter(adapter);
         btnPlayAndStop = view.findViewById(R.id.tab3_playButton);
 
         imgCurrAlbumArt = (ImageView) view.findViewById(R.id.tab3_imgAlbumArt);
@@ -102,25 +97,16 @@ public class Tab3Fragment extends Fragment {
         swipeRefreshLayout = view.findViewById(R.id.tab3_swipeRefresh);
         mediaPlayer.pause();
     }
-    
-    public void addButtonEvent(){
+
+    public void addButtonEvent() {
         view.findViewById(R.id.tab3_playButton).setOnClickListener(v -> playAndStop(view));
         view.findViewById(R.id.tab3_prevButton).setOnClickListener(v -> prev(view));
         view.findViewById(R.id.tab3_nextButton).setOnClickListener(v -> next(view));
     }
 
-    public void setListCilck() {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View views, int position, long id) {
-                Tab3Fragment.this.position = position;
-                PlaySound(position);
-            }
-        });
-    }
 
     public void PlaySound(Integer position) {
-        Tab3ListViewItem selected_item = (Tab3ListViewItem) songlist.get(position);
+        Tab3ListViewItem selected_item = (Tab3ListViewItem) musicFile.get(position);
 
         mediaPlayer.reset();
         uriCurrMusic = Uri.parse(selected_item.getUri());
@@ -152,68 +138,36 @@ public class Tab3Fragment extends Fragment {
         btnPlayAndStop.setImageResource(android.R.drawable.ic_media_pause);
     }
 
-
-    public void permissionCheck() {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 101);
-        } else {
-            loadMusic();
-        }
-    }
-
-    private void loadMusic() {
-        Drawable album_art = ContextCompat.getDrawable(view.getContext(), R.drawable.ic_contact_default);
-        songlist.clear();
-        ContentResolver contentResolver = getActivity().getContentResolver();
-        Cursor cursor = contentResolver.query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                null,
-                null,
-                null,
-                null);
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                //Bitmap album_art = BitmapFactory.decodeFile(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART)));
-                String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)).replace(".mp3", "").replace("wav", "");
-                String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST));
-                String uri = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                songlist.add(new Tab3ListViewItem(album_art, title, artist, uri));
-            }
-            cursor.close();
-        }
-
-        adapter.setList(songlist);
-
-    }
-
     public void playAndStop(View v) {
-        if(mediaPlayer.isPlaying()) {
+        if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
             btnPlayAndStop.setImageResource(android.R.drawable.ic_media_play);
-        }
-        else {
+        } else {
             PlaySound(position);
-//            mediaPlayer.start();
             btnPlayAndStop.setImageResource(android.R.drawable.ic_media_pause);
         }
     }
 
 
     public void next(View v) {
-        if(position != songlist.size()-1)
-            position +=1;
+        if (position != musicFile.size() - 1)
+            position += 1;
         else
             position = 0;
         PlaySound(position);
     }
 
     public void prev(View v) {
-        if(position != 0)
+        if (position != 0)
             position -= 1;
         else
-            position = songlist.size()-1;
+            position = musicFile.size() - 1;
         PlaySound(position);
     }
 
+    private Drawable resize(Drawable image) {
+        Bitmap b = ((BitmapDrawable) image).getBitmap();
+        Bitmap bitmapResized = Bitmap.createScaledBitmap(b, 130, 130, false);
+        return new BitmapDrawable(getResources(), bitmapResized);
+    }
 }

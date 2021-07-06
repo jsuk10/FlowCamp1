@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +23,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    static ArrayList<MusicFiles> musicFiles = new ArrayList<>();
+//    static ArrayList<MusicFiles> musicFile = new ArrayList<>();
+    static ArrayList<Tab3ListViewItem> musicFile = new ArrayList<>();
     private TabLayout tabLayout;
     final private ArrayList<String> tabNames = new ArrayList<>();
     public static final int REQUEST_CODE = 1;
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == REQUEST_CODE){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                musicFiles = getAllAudio(this);
+                musicFile = getAllAudio(this);
             }
         }else{
             permission();
@@ -95,20 +95,20 @@ public class MainActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
         } else {
-            musicFiles = getAllAudio(this);
+            musicFile = getAllAudio(this);
         }
     }
 
 
-    public static ArrayList<MusicFiles> getAllAudio(Context context) {
-        ArrayList<MusicFiles> tempAudioList = new ArrayList<>();
+    public static ArrayList<Tab3ListViewItem> getAllAudio(Context context) {
+        ArrayList<Tab3ListViewItem> tempAudioList = new ArrayList<>();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String[] items = {
                 MediaStore.Audio.Media.ALBUM,
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.ARTIST,
+                MediaStore.  Audio.Media.ARTIST,
         };
         Cursor cursor = context.getContentResolver().query(uri, items,
                 null, null, null);
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 String duration = cursor.getString(2);
                 String path = cursor.getString(3);
                 String artist = cursor.getString(4);
-                MusicFiles item = new MusicFiles(path, title, artist, album, duration);
+                Tab3ListViewItem item = new Tab3ListViewItem(path, title, artist, album, duration);
                 Log.e("Path" + path, "Album : " + album);
                 tempAudioList.add(item);
             }

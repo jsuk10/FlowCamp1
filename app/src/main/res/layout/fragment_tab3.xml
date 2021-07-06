@@ -21,18 +21,15 @@
 
             android:dividerHeight="10sp"
             android:padding="8dp">
-
-            <ListView
-                android:id="@+id/tab3_listView"
+            <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/recyclerView"
                 android:divider="@android:color/transparent"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
-                android:singleLine="true">
-            </ListView>
-
+                android:singleLine="true"/>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </RelativeLayout>

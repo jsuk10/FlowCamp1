@@ -16,7 +16,7 @@ public class MainFragmentAdapter extends FragmentPagerAdapter {
         switch (position){
             case 0: return Tab1Fragment.newInstance();
             case 1: return Tab2Fragment.newInstance();
-            case 2: return SongFragment.newInstance();
+            case 2: return Tab3Fragment.newInstance();
             default: return null;
         }
     }
