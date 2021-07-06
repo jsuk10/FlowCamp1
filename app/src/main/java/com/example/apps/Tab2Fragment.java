@@ -4,7 +4,6 @@ package com.example.apps;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -16,11 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -32,8 +29,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.io.File;
 import java.util.ArrayList;
 
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-
 
 public class Tab2Fragment extends Fragment {
 
@@ -43,7 +38,7 @@ public class Tab2Fragment extends Fragment {
     public String basePath = null;
     public GridView mGridView;
     public ArrayList<String> uriArr;
-    public Tab2GalleryAdapter mCustomImageAdapter;
+    public Tab2GalleryAdapter imageAdapter;
 
     private static final int MY_READ_PERMISSION_CODE = 101;
 
@@ -122,8 +117,8 @@ public class Tab2Fragment extends Fragment {
             cursor.close();
         }
 
-        mCustomImageAdapter = new Tab2GalleryAdapter(getActivity(), uriArr); // 앞에서 정의한 Custom Image Adapter와 연결
-        mGridView.setAdapter(mCustomImageAdapter); // GridView가 Custom Image Adapter에서 받은 값을 뿌릴 수 있도록 연결
+        imageAdapter = new Tab2GalleryAdapter(getActivity(), uriArr); // 앞에서 정의한 Custom Image Adapter와 연결
+        mGridView.setAdapter(imageAdapter); // GridView가 Custom Image Adapter에서 받은 값을 뿌릴 수 있도록 연결
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -133,21 +128,14 @@ public class Tab2Fragment extends Fragment {
 
                 Bitmap imageBitmap = BitmapFactory.decodeFile(uriArr.get(position));
                 ImageView showImage = new ImageView(context);
-                showImage.setImageBitmap(resizeBitmapImage(imageBitmap, 1000, 1500));
+                showImage.setImageBitmap(resizeBitmapImage(imageBitmap, 1000, 1000));
 
                 builder.setView(showImage);
-
-                builder.setNegativeButton("close", new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface arg0, int arg1)
-                    {
-                    }
-                });
                 builder.show();
             }
         });
 
-        mCustomImageAdapter.notifyDataSetChanged();
+        imageAdapter.notifyDataSetChanged();
     }
 
     public Bitmap resizeBitmapImage(Bitmap source, int maxWidthResolution, int maxHeightResolution)
