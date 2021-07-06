@@ -68,7 +68,7 @@ public class Tab2GalleryAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
         BitmapFactory.Options bo = new BitmapFactory.Options();
-        bo.inSampleSize = 8;
+        bo.inSampleSize = 2;
         bm = BitmapFactory.decodeFile(mItems.get(position), bo);
         Bitmap mThumbnail = ThumbnailUtils.extractThumbnail(bm, 350, 350);
         imageView.setImageBitmap(mThumbnail);
@@ -77,11 +77,8 @@ public class Tab2GalleryAdapter extends BaseAdapter {
             bm.recycle();
         }
 
-        //Glide.with(mContext).load(mItems.get(position)).into(imageView);
-
         return imageView;
     }
-
 
     @Override
     public void registerDataSetObserver(DataSetObserver observer){ // DataSetObserver의 등록(연결)

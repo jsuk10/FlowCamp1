@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -148,21 +149,21 @@ public class Tab3Fragment extends Fragment {
         try {
             mediaPlayer.setDataSource(context, uriCurrMusic);
         } catch (IOException e) {
-            Toast.makeText(getActivity(), "Uri io failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "IOException", Toast.LENGTH_SHORT).show();
         } catch (NullPointerException e) {
-            Toast.makeText(getActivity(), "Uri is null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "NullPointerException", Toast.LENGTH_SHORT).show();
         } catch (IllegalStateException e) {
-            Toast.makeText(getActivity(), "Uri state wrong응", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "IllegalStateException", Toast.LENGTH_SHORT).show();
         }
 
         try {
             mediaPlayer.prepare();
         } catch (IOException e) {
-            Toast.makeText(getActivity(), "io failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "IOException", Toast.LENGTH_SHORT).show();
         } catch (NullPointerException e) {
-            Toast.makeText(getActivity(), "is null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "NullPointerException", Toast.LENGTH_SHORT).show();
         } catch (IllegalStateException e) {
-            Toast.makeText(getActivity(), "응", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "IllegalStateException", Toast.LENGTH_SHORT).show();
         }
         mediaPlayer.start();
         btnPlayAndStop.setImageResource(android.R.drawable.ic_media_pause);
@@ -181,7 +182,7 @@ public class Tab3Fragment extends Fragment {
         musicList.clear();
 
         ContentResolver contentResolver = getActivity().getContentResolver();
-        Cursor cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
+        Cursor cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Audio.Media.TITLE + " ASC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));

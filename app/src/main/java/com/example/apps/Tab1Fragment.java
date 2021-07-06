@@ -112,10 +112,10 @@ public class Tab1Fragment extends Fragment {
                 if (!name.getText().toString().isEmpty() && !phone.getText().toString().isEmpty()) {
                     //이제 파싱해서 넣는 함수임. 빠방~~
                     addContext();
+//                    Toast.makeText(getActivity(), name.getText().toString() + "\n" + phone.getText().toString(), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getActivity(), "Please fill all text", Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(getActivity(), name.getText().toString() + "\n" + phone.getText().toString(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -160,7 +160,7 @@ public class Tab1Fragment extends Fragment {
         Drawable yourDrawable;
         arrayLists.clear();
         ContentResolver contentResolver = getActivity().getContentResolver();
-        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, ContactsContract.Contacts.DISPLAY_NAME + " ASC");
         if (cursor.moveToFirst()) {
             do {
                 name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
