@@ -11,7 +11,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -212,11 +212,11 @@ public class Tab3Fragment extends Fragment {
         txtCurrTitle.setText(itemCurrMusic.getTitle());
         txtCurrArtist.setText(itemCurrMusic.getArtist());
 
-        seekbar.setMax(Integer.parseInt(selected_item.getDuration()) / 1000);
+        seekbar.setMax(Integer.parseInt(itemCurrMusic.getDuration()) / 1000);
         playTime.setText(formattendTime(mediaPlayer.getDuration() / 1000));
-        Maxduration = Integer.parseInt(selected_item.getDuration()) / 1000;
+        Maxduration = Integer.parseInt(itemCurrMusic.getDuration()) / 1000;
 
-        endTime.setText(formattendTime(Integer.parseInt(selected_item.getDuration()) / 1000));
+        endTime.setText(formattendTime(Integer.parseInt(itemCurrMusic.getDuration()) / 1000));
 
         try {
             mediaPlayer.setDataSource(context, uriCurrMusic);
