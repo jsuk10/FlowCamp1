@@ -5,16 +5,11 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,18 +27,16 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class Tab3Fragment extends Fragment {
     private View view;
     private ListView listView;
-    private ArrayList<Tab3ListViewItem> songlist;
+    private ArrayList<Tab3ListViewItem> musicList;
     private MediaPlayer mediaPlayer;
     private Context context;
-    private Integer position = 0;
+    private Integer position;
     private Tab3ListViewAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ImageButton btnPlayAndStop;
@@ -54,6 +46,7 @@ public class Tab3Fragment extends Fragment {
     private ImageView imgCurrAlbumArt;
     private TextView txtCurrTitle;
     private TextView txtCurrArtist;
+    private Tab3ListViewItem itemCurrMusic;
 
     public Tab3Fragment() {
         // Required empty public constructor
@@ -61,12 +54,22 @@ public class Tab3Fragment extends Fragment {
 
     public static Tab3Fragment newInstance() {
         Tab3Fragment tab3_fragment = new Tab3Fragment();
+        Log.e("hello","New Instance");
         return tab3_fragment;
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        musicList = new ArrayList<>();
+        adapter = new Tab3ListViewAdapter();
+        mediaPlayer = new MediaPlayer();
+        position = 0;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.e("hello","Hello");
         view = inflater.inflate(R.layout.fragment_tab3, container, false);
         context = container.getContext();
         init();
@@ -92,23 +95,28 @@ public class Tab3Fragment extends Fragment {
     }
 
     public void init(){
-        songlist = new ArrayList<>();
-        adapter = new Tab3ListViewAdapter();
-        mediaPlayer = new MediaPlayer();
-
         listView = view.findViewById(R.id.tab3_listView);
         listView.setAdapter(adapter);
 
         swipeRefreshLayout = view.findViewById(R.id.tab3_swipeRefresh);
-        //seekBar = view.findViewById(R.id.tab3_seekBar);
         btnPlayAndStop = view.findViewById(R.id.tab3_playButton);
 
         imgCurrAlbumArt = (ImageView) view.findViewById(R.id.tab3_imgAlbumArt);
         txtCurrTitle = (TextView) view.findViewById(R.id.tab3_txtTitle);
         txtCurrArtist = (TextView) view.findViewById(R.id.tab3_txtArtist);
 
+        if(itemCurrMusic != null) {
+            imgCurrAlbumArt.setImageURI(itemCurrMusic.getAlbumArt());
+            txtCurrTitle.setText(itemCurrMusic.getTitle());
+            txtCurrArtist.setText(itemCurrMusic.getArtist());
+        }
+        if(mediaPlayer.isPlaying()) {
+            btnPlayAndStop.setImageResource(android.R.drawable.ic_media_pause);
+        } else {
+            btnPlayAndStop.setImageResource(android.R.drawable.ic_media_play);
+        }
+
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.pause();
     }
 
     public void addButtonEvent(){
@@ -122,20 +130,20 @@ public class Tab3Fragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View views, int position, long id) {
                 Tab3Fragment.this.position = position;
-                PlaySound(position);
+                playMusic(position);
             }
         });
     }
 
-    public void PlaySound(Integer position) {
-        Tab3ListViewItem selected_item = (Tab3ListViewItem) songlist.get(position);
+    public void playMusic(Integer position) {
 
         mediaPlayer.reset();
-        uriCurrMusic = Uri.parse(selected_item.getUri());
 
-        imgCurrAlbumArt.setImageURI(selected_item.getAlbumArt());
-        txtCurrTitle.setText(selected_item.getTitle());
-        txtCurrArtist.setText(selected_item.getArtist());
+        itemCurrMusic = musicList.get(position);
+        uriCurrMusic = Uri.parse(itemCurrMusic.getUri());
+        imgCurrAlbumArt.setImageURI(itemCurrMusic.getAlbumArt());
+        txtCurrTitle.setText(itemCurrMusic.getTitle());
+        txtCurrArtist.setText(itemCurrMusic.getArtist());
 
         try {
             mediaPlayer.setDataSource(context, uriCurrMusic);
@@ -170,8 +178,7 @@ public class Tab3Fragment extends Fragment {
     }
 
     private void loadMusic() {
-        //Drawable album_art = ContextCompat.getDrawable(view.getContext(), R.drawable.ic_contact_default);
-        songlist.clear();
+        musicList.clear();
 
         ContentResolver contentResolver = getActivity().getContentResolver();
         Cursor cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
@@ -186,13 +193,13 @@ public class Tab3Fragment extends Fragment {
                 Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
                 Uri sAlbumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
 
-                songlist.add(new Tab3ListViewItem(sAlbumArtUri, title, artist, uri));
+                musicList.add(new Tab3ListViewItem(sAlbumArtUri, title, artist, uri));
 
             }
             cursor.close();
         }
 
-        adapter.setList(songlist);
+        adapter.setList(musicList);
 
     }
 
@@ -202,26 +209,26 @@ public class Tab3Fragment extends Fragment {
             btnPlayAndStop.setImageResource(android.R.drawable.ic_media_play);
         }
         else {
-            PlaySound(position);
+            playMusic(position);
             btnPlayAndStop.setImageResource(android.R.drawable.ic_media_pause);
         }
     }
 
 
     public void next(View v) {
-        if(position != songlist.size()-1)
+        if(position != musicList.size()-1)
             position +=1;
         else
             position = 0;
-        PlaySound(position);
+        playMusic(position);
     }
 
     public void prev(View v) {
         if(position != 0)
             position -= 1;
         else
-            position = songlist.size()-1;
-        PlaySound(position);
+            position = musicList.size()-1;
+        playMusic(position);
     }
 
 }
